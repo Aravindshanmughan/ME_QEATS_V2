@@ -105,7 +105,8 @@ public class RestaurantControllerTest {
 
     MockHttpServletResponse response = mvc.perform(
         get(uri.toString()).accept(APPLICATION_JSON_UTF8)
-    ).andReturn().getResponse();
+
+        ).andReturn().getResponse();
 
     assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
 
