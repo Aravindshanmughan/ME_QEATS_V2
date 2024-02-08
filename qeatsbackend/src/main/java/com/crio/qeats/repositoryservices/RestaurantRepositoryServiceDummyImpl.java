@@ -38,20 +38,15 @@ public class RestaurantRepositoryServiceDummyImpl implements RestaurantRepositor
     List<Restaurant> restaurantList = new ArrayList<>();
     try {
       restaurantList = loadRestaurantsDuringNormalHours();
-      System.out.println(restaurantList);
     } catch (IOException e) {
       e.printStackTrace();
     }
-   // for (Restaurant restaurant : restaurantList) {
-       //if(restaurant != null){
-      //   restaurant.setLatitude(latitude + ThreadLocalRandom.current().nextDouble(0.000001, 0.2));
-      //   restaurant.setLongitude(longitude + ThreadLocalRandom.current().nextDouble(0.000001, 0.2));
-      //  }
-      
-  //  }
+    for (Restaurant restaurant : restaurantList) {
+      restaurant.setLatitude(latitude + ThreadLocalRandom.current().nextDouble(0.000001, 0.2));
+      restaurant.setLongitude(longitude + ThreadLocalRandom.current().nextDouble(0.000001, 0.2));
+    }
     return restaurantList;
   }
-
 
 
 

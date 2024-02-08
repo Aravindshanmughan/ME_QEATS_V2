@@ -16,9 +16,18 @@ import static com.crio.qeats.controller.RestaurantController.POST_ORDER_API;
 import static com.crio.qeats.controller.RestaurantController.RESTAURANTS_API;
 import static com.crio.qeats.controller.RestaurantController.RESTAURANT_API_ENDPOINT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.crio.qeats.QEatsApplication;
 import com.crio.qeats.exchanges.GetRestaurantsRequest;
@@ -105,8 +114,7 @@ public class RestaurantControllerTest {
 
     MockHttpServletResponse response = mvc.perform(
         get(uri.toString()).accept(APPLICATION_JSON_UTF8)
-
-        ).andReturn().getResponse();
+    ).andReturn().getResponse();
 
     assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
 
@@ -125,7 +133,6 @@ public class RestaurantControllerTest {
     assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
   }
 
-  //-90 TO 90 latitude
   @Test
   public void invalidLongitudeResultsInBadHttpRequest() throws Exception {
     URI uri = UriComponentsBuilder

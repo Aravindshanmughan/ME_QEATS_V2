@@ -18,11 +18,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.logging.Logger;
 
 // TODO: CRIO_TASK_MODULE_RESTAURANTSAPI
 // Implement Controller using Spring annotations.
@@ -42,22 +48,20 @@ public class RestaurantController {
   public static final String GET_ORDERS_API = "/orders";
 
   @Autowired
- private RestaurantService restaurantService;
+  private RestaurantService restaurantService;
 
 
-  
+
   @GetMapping(RESTAURANTS_API)
   public ResponseEntity<GetRestaurantsResponse> getRestaurants(
-    @Valid  GetRestaurantsRequest getRestaurantsRequest) {
+      @Valid GetRestaurantsRequest getRestaurantsRequest) {
 
-  //  log.info("getRestaurants called with {}", getRestaurantsRequest);
+    log.info("getRestaurants called with {}", getRestaurantsRequest);
     GetRestaurantsResponse getRestaurantsResponse;
 
-      //CHECKSTYLE:OFF
       getRestaurantsResponse = restaurantService
           .findAllRestaurantsCloseBy(getRestaurantsRequest, LocalTime.now());
-  //    log.info("getRestaurants returned {}", getRestaurantsResponse);
-      //CHECKSTYLE:ON
+      log.info("getRestaurants returned {}", getRestaurantsResponse);
 
     return ResponseEntity.ok().body(getRestaurantsResponse);
   }
