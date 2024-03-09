@@ -112,7 +112,7 @@ class RestaurantServiceTest {
   @Test
   void normalHourServingRadiusIs5Kms() throws IOException {
 
-
+    assertEquals(getServingRadiusforNormalHours(loadRestaurantsDuringNormalHours(), LocalTime.of(5, 0)), "5.0");
 
   }
 

@@ -67,12 +67,14 @@ public class RestaurantRepositoryServiceTest {
   @Value("${spring.redis.port}")
   private int redisPort;
 
-  private RedisServer server = null;
+  private RedisServer server;
 
 
 
   @BeforeEach
   void setup() throws IOException {
+    server = new RedisServer(redisPort);
+    server.start();
     allRestaurants = listOfRestaurants();
     for (RestaurantEntity restaurantEntity : allRestaurants) {
       mongoTemplate.save(restaurantEntity, "restaurants");
@@ -82,6 +84,10 @@ public class RestaurantRepositoryServiceTest {
 
   @AfterEach
   void teardown() {
+    if (server != null) {
+      server.stop();
+  }
+
     mongoTemplate.dropCollection("restaurants");
   }
 

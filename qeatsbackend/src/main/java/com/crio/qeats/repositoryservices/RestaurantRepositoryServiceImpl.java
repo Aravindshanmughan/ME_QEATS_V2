@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import javax.inject.Provider;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -37,12 +38,13 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
-
+@Primary
 @Service
 public class RestaurantRepositoryServiceImpl implements RestaurantRepositoryService {
-
-
-
+  
+  @Autowired
+  private RestaurantRepository restaurantRepository;
+ 
 
   @Autowired
   private MongoTemplate mongoTemplate;
@@ -64,19 +66,18 @@ public class RestaurantRepositoryServiceImpl implements RestaurantRepositoryServ
   // Check RestaurantRepositoryService.java file for the interface contract.
   public List<Restaurant> findAllRestaurantsCloseBy(Double latitude,
       Double longitude, LocalTime currentTime, Double servingRadiusInKms) {
+       // String geoHash = GeoHash.geoHashStringWithCharacterPrecision(latitude, longitude, 7); 
 
-         Query query = new Query();
-        query.addCriteria(Criteria.where("latitude").is(latitude).and("longitude").is(longitude));
+        //  Query query = new Query();
+        //  query.addCriteria(Criteria.where("geoHash").is(geoHash));
+
         
-
-        List<RestaurantEntity> restaurantEntities = mongoTemplate.find(query, RestaurantEntity.class);
-
-
-      //CHECKSTYLE:OFF
-      //CHECKSTYLE:ON
+     //  List<RestaurantEntity> restaurantEntities = mongoTemplate.find(query, RestaurantEntity.class);
+     List<RestaurantEntity> restaurantEntities = restaurantRepository.findAll();
 
 
       return restaurantEntities.stream()
+      
       .filter(restaurantEntity -> isRestaurantCloseByAndOpen(restaurantEntity, currentTime, latitude, longitude, servingRadiusInKms))
       .map(this::convertToDto) 
       .collect(Collectors.toList());
@@ -87,14 +88,7 @@ public class RestaurantRepositoryServiceImpl implements RestaurantRepositoryServ
     return modelMapper.map(restaurantEntity, Restaurant.class);
 }
 
-
-
-
-
-
-
-
-  // TODO: CRIO_TASK_MODULE_NOSQL
+ // TODO: CRIO_TASK_MODULE_NOSQL
   // Objective:
   // 1. Check if a restaurant is nearby and open. If so, it is a candidate to be returned.
   // NOTE: How far exactly is "nearby"?
